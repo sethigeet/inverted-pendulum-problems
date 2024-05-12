@@ -25,7 +25,7 @@ class single_inverted_pendulum(Node):
     mass = 1.0
     g = 9.81
     l = 1.0
-    callback_timeperiod = 0.05
+    callback_timeperiod = 0.0003
 
     def __init__(self):
         super().__init__('main')
@@ -46,27 +46,26 @@ class single_inverted_pendulum(Node):
     def update_pendulum_states(self):
         # Dynamics/Kinematics
 
-        # dt = time.time() - self.t_prev
-        # self.t_prev = time.time()
-        dt = 0.05
+        dt = time.time() - self.t_prev
+        self.t_prev = time.time()
+        # dt = 0.05
 
         # Intermediate Calculations
         inertia = self.mass*self.l*self.l
 
-        net_torque = 1 - self.mass * self.g * self.l * sin(self.theta)
+        net_torque = self.torque_value - self.mass * self.g * self.l * sin(self.theta)
      
         theta_dot_dot = net_torque / inertia
 
         # Updating states
         self.theta += self.theta_dot * dt
-        if self.theta > 2*np.pi:
-            self.theta -= 2*np.pi
-        elif self.theta <0:
-            self.theta += 2*np.pi
+
+        self.theta = (self.theta + np.pi)%(2*np.pi) - np.pi
+
         self.theta_dot += theta_dot_dot * dt
         
         self.visualize_pendulum()
-        self.get_logger().info(f"Theta:{self.theta:.2f} Theta_dot:{self.theta_dot:.2f} torque:{net_torque:.2f} mglsin:{self.mass * self.g * self.l * sin(self.theta):.4f} input:{self.torque_value:.2f}")
+        self.get_logger().info(f"Theta:{self.theta:.2f} Theta_dot:{self.theta_dot:.2f} torque:{net_torque:.2f} dt:{dt}")
         # if abs(net_torque) < 0.02:
         #     print(net_torque, self.theta)
         return
