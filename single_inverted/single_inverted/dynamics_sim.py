@@ -39,7 +39,7 @@ class single_inverted_pendulum(Node):
     mass = 1.0
     g = 9.81
     l = 1.0
-    state_update_frequency = 3000
+    state_update_frequency = 500
     state_update_timeperiod = 1 / state_update_frequency
 
     feedback_frequency = 50
@@ -72,28 +72,37 @@ class single_inverted_pendulum(Node):
         self.get_logger().info('Accepting Input')
         self.get_logger().info('Publishing Feedback')
 
+    def f(self,x, u):
+        inertia = self.mass*self.l*self.l
+        torque_input = u
+
+        net_torque = - self.mass*self.g*self.l*sin(x[0]) + torque_input
+
+        return np.array([x[1], net_torque/inertia])
+
+
     def update_pendulum_states(self):
         # Dynamics/Kinematics
+        '''
+        x_dot = f(x ,u)
+        x:=[theta, theta_dot]
+        u:=[torque_input]
+        '''
 
         dt = time.time() - self.t_prev
         self.t_prev = time.time()
 
-        # if abs(dt - self.state_update_timeperiod) / self.state_update_timeperiod > 0.05:
-        #     self.get_logger().warning(f'Decrease state_update_frequency, its too high:{dt} and {abs(dt - self.state_update_timeperiod)} and {abs(dt - self.state_update_timeperiod) / self.state_update_timeperiod}')
 
         # Intermediate Calculations
-        inertia = self.mass*self.l*self.l
+        x = np.array([self.theta, self.theta_dot])
+        x_intermediate = x + 0.5*dt*self.f(x, self.torque_value)
 
-        net_torque = self.torque_value - self.mass * self.g * self.l * sin(self.theta)
+        x += dt * self.f(x_intermediate, self.torque_value)
 
-        theta_dot_dot = net_torque / inertia
+        self.theta, self.theta_dot = x
 
-        # Updating states
-        self.theta += self.theta_dot * dt
+        self.theta = (self.theta + np.pi)%(2*np.pi) - np.pi # Keeping theta between -pi to pi
 
-        self.theta = (self.theta + np.pi)%(2*np.pi) - np.pi
-
-        self.theta_dot += theta_dot_dot * dt
 
         self.visualize_pendulum()
         #self.get_logger().info(f"Theta:{self.theta:.2f} Theta_dot:{self.theta_dot:.2f} torque:{net_torque:.2f} dt:{dt}")
