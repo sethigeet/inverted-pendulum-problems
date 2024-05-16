@@ -95,6 +95,7 @@ class single_inverted_pendulum(Node):
 
         # Intermediate Calculations
         x = np.array([self.theta, self.theta_dot])
+        
         x_intermediate = x + 0.5*dt*self.f(x, self.torque_value)
 
         x += dt * self.f(x_intermediate, self.torque_value)
