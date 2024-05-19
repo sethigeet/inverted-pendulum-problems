@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import time
 from math import sin, cos
 
@@ -13,8 +12,7 @@ from geometry_msgs.msg import Point
 from custom_msgs.msg import TorqueInput, States
 
 
-class single_inverted_pendulum(Node):
-
+class SingleInvertedPendulum(Node):
     # Initialize State/s
     theta0 = np.pi / 2  # pi, -pi represents upright
     theta_dot0 = 0.0
@@ -40,14 +38,14 @@ class single_inverted_pendulum(Node):
     mass = 1.0
     g = 9.81
     l = 1.0
+
     state_update_frequency = 500
     state_update_timeperiod = 1 / state_update_frequency
-
     feedback_frequency = 50
-    # feedback_timeperiod = 1 / feedback_frequency
+    feedback_timeperiod = 1 / feedback_frequency
 
     def __init__(self):
-        super().__init__("main")
+        super().__init__("single_inverted_pendulum")
 
         # Timers
         update_states_timer = self.create_timer(
@@ -114,19 +112,17 @@ class single_inverted_pendulum(Node):
         self.visualize_pendulum()
         # self.get_logger().info(f"Theta:{self.theta:.2f} Theta_dot:{self.theta_dot:.2f} torque:{net_torque:.2f} dt:{dt}")
 
-        return
-
     def feedback(self):
         states_msg = States()
         states_msg.theta = self.theta
         states_msg.theta_dot = self.theta_dot
         self.feedback_pub.publish(states_msg)
-        return
 
     def visualize_pendulum(self):
         pendulum_marker = Marker()
         pendulum_marker.header.frame_id = "map"
         pendulum_marker.id = self.obj_id
+        self.obj_id += 1
         pendulum_marker.type = Marker.LINE_STRIP
         pendulum_marker.action = Marker.ADD
         pendulum_marker.pose.orientation.w = 1.0
@@ -142,31 +138,31 @@ class single_inverted_pendulum(Node):
         point_2.x = self.l * sin(self.theta)
         point_2.y = -self.l * cos(self.theta)
         point_2.z = 0.0
+
         pendulum_marker.points = [point_1, point_2]
         # print(pendulum_marker.points)
+
         # Set the color (red in this case)
         pendulum_marker.color.r = 1.0
         pendulum_marker.color.a = 1.0  # Alpha value
-        Duration_of_pendulum_marker = Duration()
-        Duration_of_pendulum_marker.sec = 0
-        Duration_of_pendulum_marker.nanosec = int(self.state_update_timeperiod * 1e9)
-        pendulum_marker.lifetime = (
-            Duration_of_pendulum_marker  # Permanent pendulum_marker
-        )
-        self.visualizer.publish(pendulum_marker)
 
-        self.obj_id += 1
+        duration_of_pendulum_marker = Duration()
+        duration_of_pendulum_marker.sec = 0
+        duration_of_pendulum_marker.nanosec = int(self.state_update_timeperiod * 1e9)
+        pendulum_marker.lifetime = (
+            duration_of_pendulum_marker  # Permanent pendulum_marker
+        )
+
+        self.visualizer.publish(pendulum_marker)
 
     def update_input_torque(self, msg):
         self.torque_value = max(-5, min(5, msg.torque_value))
-
-        return
 
 
 def main(args=None):
     rclpy.init(args=args)
 
-    node = single_inverted_pendulum()
+    node = SingleInvertedPendulum()
     rclpy.spin(node)
     node.destroy_node()
 
