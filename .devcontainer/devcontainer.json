@@ -1,0 +1,39 @@
+{
+    "name": "ROS 2 Development Container",
+    "privileged": true,
+    "remoteUser": "geet",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "USERNAME": "geet"
+        }
+    },
+    "workspaceFolder": "/home/geet/racing_team_ws",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/geet/racing_team_ws,type=bind",
+    "customizations": {
+        "vscode": {
+            "extensions":[
+                "ms-vscode.cpptools",
+                "twxs.cmake",
+                "ms-iot.vscode-ros",
+                "ms-python.vscode-pylance",
+                "ms-python.black-formatter",
+                "eamodio.gitlens"
+            ]
+        }
+    },
+    "containerEnv": {
+        "DISPLAY": "unix:0",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "ROS_DOMAIN_ID": "42"
+    },
+    "runArgs": [
+        "--net=host",
+        "-e", "DISPLAY=${env:DISPLAY}"
+    ],
+    "mounts": [
+       "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
+        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "sudo rosdep update && sudo rosdep install --from-paths src --ignore-src -y && sudo chown -R $(whoami) /home/geet"
+}
