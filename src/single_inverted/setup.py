@@ -28,6 +28,7 @@ setup(
         "console_scripts": [
             "dynamics_sim = single_inverted.dynamics_sim:main",
             "interfacer = single_inverted.interfacer:main",
+            "balancer = single_inverted.balancer:main",
         ],
     },
 )

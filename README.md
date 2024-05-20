@@ -13,6 +13,13 @@
 #### 2) Double Inverted Pendulum
 - Create a new pacakge with dynamics of an double inverted pendulum
 
+## Demo of Exercise Solutions
+
+### 1) Single Inverted Pendulum
+
+#### Balance:
+![Part B Demo](illustrations/part-b-demo.gif)
+
 ## How-to
 1. Clone this repository in /src folder of your ros2 workspace
 2. Build and source the workspace. Navigate to your workspace directory and run
@@ -28,6 +35,3 @@ ros2 launch single_inverted single_inverted_pendulum.launch.py
 
 5. Change the initial states by varying the values theta0 and theta_dot0 manually or by un-commenting relevant sections for random initializations
 6. Custom messages definitions are used for input and feedback 
-
-
-
