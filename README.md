@@ -20,6 +20,9 @@
 #### Balance:
 ![Part B Demo](illustrations/part-b-demo.gif)
 
+#### Swing Up:
+![Part C Demo](illustrations/part-c-demo.gif)
+
 ## How-to
 1. Clone this repository in /src folder of your ros2 workspace
 2. Build and source the workspace. Navigate to your workspace directory and run

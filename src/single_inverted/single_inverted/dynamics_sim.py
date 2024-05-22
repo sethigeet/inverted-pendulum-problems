@@ -20,9 +20,9 @@ class SingleInvertedPendulum(Node):
     # Part A
     # theta0 = np.pi / 2
     # Part B
-    theta0 = np.pi - (np.random.rand() - 0.5) / 2
+    # theta0 = np.pi - (np.random.rand() - 0.5) / 2
     # Part C
-    # theta0 = 0 - (np.random.rand() - 0.5) / 2
+    theta0 = 0 - (np.random.rand() - 0.5) / 2
 
     # make sure theta0 is between -pi to pi
     theta0 = (theta0 + np.pi) % (2 * np.pi) - np.pi

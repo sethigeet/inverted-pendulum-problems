@@ -29,6 +29,7 @@ setup(
             "dynamics_sim = single_inverted.dynamics_sim:main",
             "interfacer = single_inverted.interfacer:main",
             "balancer = single_inverted.balancer:main",
+            "swing_up = single_inverted.swing_up:main",
         ],
     },
 )
