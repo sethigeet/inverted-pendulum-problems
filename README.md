@@ -23,6 +23,9 @@
 #### Swing Up:
 ![Part C Demo](illustrations/part-c-demo.gif)
 
+### 2) Double Inverted Pendulum
+![Part 2 Demo](illustrations/part-2-demo.gif)
+
 ## How-to
 1. Clone this repository in /src folder of your ros2 workspace
 2. Build and source the workspace. Navigate to your workspace directory and run
